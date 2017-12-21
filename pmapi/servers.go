@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"github.com/imSQL/proxysql-master/admin/servers"
+	"github.com/imSQL/go-proxysql-library/admin/servers"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

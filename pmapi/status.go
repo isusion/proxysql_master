@@ -3,7 +3,7 @@ package pmapi
 import (
 	"net/http"
 
-	"github.com/imSQL/proxysql-master/admin/status"
+	"github.com/imSQL/go-proxysql-library/admin/status"
 
 	"github.com/gin-gonic/gin"
 )

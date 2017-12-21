@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/imSQL/proxysql-master/admin/variables"
+	"github.com/imSQL/go-proxysql-library/admin/variables"
 )
 
 //查询出所有变量的内容
