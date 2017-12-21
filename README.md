@@ -32,6 +32,8 @@ I recommend go version >= 1.6.
 
 # go get -u github.com/gin-gonic/gin
 
+# go get -u github.com/imSQL/proxysql
+
 # go install proxysql-master 
 ```
 
