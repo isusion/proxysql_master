@@ -4,15 +4,15 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"github.com/imSQL/go-proxysql-library/admin/users"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/imSQL/proxysql"
 )
 
 func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 	/*新建一个用户实例*/
-	var tmpusr users.Users
+	var tmpusr proxysql.Users
 	var err error
 
 	hostname := c.Query("hostname")
@@ -21,7 +21,7 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []users.Users{})
+		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -52,7 +52,7 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 
 func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 	/*新建一个用户实例*/
-	var tmpusr users.Users
+	var tmpusr proxysql.Users
 	var err error
 
 	hostname := c.Query("hostname")
@@ -61,7 +61,7 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []users.Users{})
+		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -92,8 +92,8 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 
 func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 
-	var tmpusr users.Users
-	var aryusr []users.Users
+	var tmpusr proxysql.Users
+	var aryusr []proxysql.Users
 
 	var err error
 
@@ -115,7 +115,7 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 	skip := (page - 1) * limit
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []users.Users{})
+		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -142,7 +142,7 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 
 	/*新建一个用户实例*/
-	var tmpusr users.Users
+	var tmpusr proxysql.Users
 	var err error
 
 	hostname := c.Query("hostname")
@@ -151,7 +151,7 @@ func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []users.Users{})
+		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username

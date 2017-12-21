@@ -4,17 +4,17 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"github.com/imSQL/go-proxysql-library/admin/queryrules"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/imSQL/proxysql"
 )
 
 //查询出所有查询规则
 func (pmapi *PMApi) ListAllQueryRules(c *gin.Context) {
 
-	var tmpqr queryrules.QueryRules
-	var aryqrs []queryrules.QueryRules
+	var tmpqr proxysql.QueryRules
+	var aryqrs []proxysql.QueryRules
 	var err error
 
 	hostname := c.Query("hostname")
@@ -35,7 +35,7 @@ func (pmapi *PMApi) ListAllQueryRules(c *gin.Context) {
 	skip := (page - 1) * limit
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []queryrules.QueryRules{})
+		c.JSON(http.StatusOK, []proxysql.QueryRules{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -60,7 +60,7 @@ func (pmapi *PMApi) ListAllQueryRules(c *gin.Context) {
 
 func (pmapi *PMApi) CreateOneQueryRules(c *gin.Context) {
 
-	var tmpqr queryrules.QueryRules
+	var tmpqr proxysql.QueryRules
 	var err error
 
 	hostname := c.Query("hostname")
@@ -69,7 +69,7 @@ func (pmapi *PMApi) CreateOneQueryRules(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []queryrules.QueryRules{})
+		c.JSON(http.StatusOK, []proxysql.QueryRules{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -99,7 +99,7 @@ func (pmapi *PMApi) CreateOneQueryRules(c *gin.Context) {
 
 func (pmapi *PMApi) DeleteOneQueryRules(c *gin.Context) {
 
-	var tmpqr queryrules.QueryRules
+	var tmpqr proxysql.QueryRules
 	var err error
 
 	hostname := c.Query("hostname")
@@ -108,7 +108,7 @@ func (pmapi *PMApi) DeleteOneQueryRules(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []queryrules.QueryRules{})
+		c.JSON(http.StatusOK, []proxysql.QueryRules{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -138,7 +138,7 @@ func (pmapi *PMApi) DeleteOneQueryRules(c *gin.Context) {
 
 /*更新一个新的查询规则*/
 func (pmapi *PMApi) UpdateOneQueryRules(c *gin.Context) {
-	var tmpqr queryrules.QueryRules
+	var tmpqr proxysql.QueryRules
 	var err error
 
 	hostname := c.Query("hostname")
@@ -147,7 +147,7 @@ func (pmapi *PMApi) UpdateOneQueryRules(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []queryrules.QueryRules{})
+		c.JSON(http.StatusOK, []proxysql.QueryRules{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username

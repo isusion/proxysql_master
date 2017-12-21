@@ -4,17 +4,17 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"github.com/imSQL/go-proxysql-library/admin/servers"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/imSQL/proxysql"
 )
 
 /*返回所有后端数据库服务器的信息*/
 func (pmapi *PMApi) ListAllServers(c *gin.Context) {
 
-	var tmpserver servers.Servers
-	var aryservers []servers.Servers
+	var tmpserver proxysql.Servers
+	var aryservers []proxysql.Servers
 
 	var err error
 
@@ -36,7 +36,7 @@ func (pmapi *PMApi) ListAllServers(c *gin.Context) {
 	skip := (page - 1) * limit
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []servers.Servers{})
+		c.JSON(http.StatusOK, []proxysql.Servers{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -62,7 +62,7 @@ func (pmapi *PMApi) ListAllServers(c *gin.Context) {
 /*创建一个新的后端数据库服务节点*/
 func (pmapi *PMApi) CreateOneServer(c *gin.Context) {
 
-	var tmpserver servers.Servers
+	var tmpserver proxysql.Servers
 	var err error
 
 	hostname := c.Query("hostname")
@@ -71,7 +71,7 @@ func (pmapi *PMApi) CreateOneServer(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []servers.Servers{})
+		c.JSON(http.StatusOK, []proxysql.Servers{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -102,7 +102,7 @@ func (pmapi *PMApi) CreateOneServer(c *gin.Context) {
 
 /*删除指定服务器*/
 func (pmapi *PMApi) DeleteOneServers(c *gin.Context) {
-	var tmpserver servers.Servers
+	var tmpserver proxysql.Servers
 	var err error
 
 	hostname := c.Query("hostname")
@@ -111,7 +111,7 @@ func (pmapi *PMApi) DeleteOneServers(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []servers.Servers{})
+		c.JSON(http.StatusOK, []proxysql.Servers{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -142,7 +142,7 @@ func (pmapi *PMApi) DeleteOneServers(c *gin.Context) {
 
 /*更新服务信息的patch函数*/
 func (pmapi *PMApi) UpdateOneServer(c *gin.Context) {
-	var tmpserver servers.Servers
+	var tmpserver proxysql.Servers
 	var err error
 
 	hostname := c.Query("hostname")
@@ -151,7 +151,7 @@ func (pmapi *PMApi) UpdateOneServer(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []servers.Servers{})
+		c.JSON(http.StatusOK, []proxysql.Servers{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username

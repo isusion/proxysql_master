@@ -4,17 +4,17 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"github.com/imSQL/go-proxysql-library/admin/schedulers"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/imSQL/proxysql"
 )
 
 /*与调取器相关的api函数*/
 func (pmapi *PMApi) ListAllScheduler(c *gin.Context) {
 
-	var tmpsch schedulers.Schedulers
-	var arysch []schedulers.Schedulers
+	var tmpsch proxysql.Schedulers
+	var arysch []proxysql.Schedulers
 	var err error
 
 	hostname := c.Query("hostname")
@@ -35,7 +35,7 @@ func (pmapi *PMApi) ListAllScheduler(c *gin.Context) {
 	skip := (page - 1) * limit
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []schedulers.Schedulers{})
+		c.JSON(http.StatusOK, []proxysql.Schedulers{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -59,7 +59,7 @@ func (pmapi *PMApi) ListAllScheduler(c *gin.Context) {
 
 func (pmapi *PMApi) CreateOneScheduler(c *gin.Context) {
 
-	var tmpsch schedulers.Schedulers
+	var tmpsch proxysql.Schedulers
 	var err error
 
 	hostname := c.Query("hostname")
@@ -68,7 +68,7 @@ func (pmapi *PMApi) CreateOneScheduler(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []schedulers.Schedulers{})
+		c.JSON(http.StatusOK, []proxysql.Schedulers{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -98,7 +98,7 @@ func (pmapi *PMApi) CreateOneScheduler(c *gin.Context) {
 }
 
 func (pmapi *PMApi) DeleteOneScheduler(c *gin.Context) {
-	var tmpsch schedulers.Schedulers
+	var tmpsch proxysql.Schedulers
 	var err error
 
 	hostname := c.Query("hostname")
@@ -107,7 +107,7 @@ func (pmapi *PMApi) DeleteOneScheduler(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []schedulers.Schedulers{})
+		c.JSON(http.StatusOK, []proxysql.Schedulers{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -137,7 +137,7 @@ func (pmapi *PMApi) DeleteOneScheduler(c *gin.Context) {
 }
 
 func (pmapi *PMApi) UpdateOneScheduler(c *gin.Context) {
-	var tmpsch schedulers.Schedulers
+	var tmpsch proxysql.Schedulers
 	var err error
 
 	hostname := c.Query("hostname")
@@ -146,7 +146,7 @@ func (pmapi *PMApi) UpdateOneScheduler(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []schedulers.Schedulers{})
+		c.JSON(http.StatusOK, []proxysql.Schedulers{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username

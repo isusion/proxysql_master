@@ -5,13 +5,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/imSQL/go-proxysql-library/admin/variables"
+	"github.com/imSQL/proxysql"
 )
 
 //查询出所有变量的内容
 func (pmapi *PMApi) ListPsVariables(c *gin.Context) {
-	var tmpvars variables.Variables
-	var aryvars []variables.Variables
+	var tmpvars proxysql.Variables
+	var aryvars []proxysql.Variables
 	var err error
 
 	hostname := c.Query("hostname")
@@ -34,7 +34,7 @@ func (pmapi *PMApi) ListPsVariables(c *gin.Context) {
 	*/
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []variables.Variables{})
+		c.JSON(http.StatusOK, []proxysql.Variables{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
@@ -59,7 +59,7 @@ func (pmapi *PMApi) ListPsVariables(c *gin.Context) {
 
 func (pmapi *PMApi) UpdateOneVariables(c *gin.Context) {
 
-	var tmpvars variables.Variables
+	var tmpvars proxysql.Variables
 	var err error
 
 	hostname := c.Query("hostname")
@@ -68,7 +68,7 @@ func (pmapi *PMApi) UpdateOneVariables(c *gin.Context) {
 	password := c.Query("adminpass")
 
 	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []variables.Variables{})
+		c.JSON(http.StatusOK, []proxysql.Variables{})
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
