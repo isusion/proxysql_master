@@ -7,7 +7,7 @@ RUN \
     mkdir -p github.com/imSQL && \
     go get -u github.com/go-sql-driver/mysql && \
     go get -u github.com/gin-gonic/gin && \
-    git clone https://github.com/imSQL/go-proxysql-library.git github.com/imSQL/go-proxysql-library && \
+    go get -u github.com/imSQL/proxysql && \
     git clone https://github.com/imSQL/proxysql-master.git github.com/imSQL/proxysql-master && \
     cd /go/src/github.com/imSQL && \
     go install ./proxysql-master && \
