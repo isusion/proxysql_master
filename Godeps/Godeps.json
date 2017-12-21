@@ -37,32 +37,8 @@
 			"Rev": "1e59b77b52bf8e4b449a57e6f79f21226d571845"
 		},
 		{
-			"ImportPath": "github.com/imSQL/go-proxysql-library/admin/cmd",
-			"Rev": "b455362b0b75406464290dec344495e95bc5a538"
-		},
-		{
-			"ImportPath": "github.com/imSQL/go-proxysql-library/admin/queryrules",
-			"Rev": "b455362b0b75406464290dec344495e95bc5a538"
-		},
-		{
-			"ImportPath": "github.com/imSQL/go-proxysql-library/admin/schedulers",
-			"Rev": "b455362b0b75406464290dec344495e95bc5a538"
-		},
-		{
-			"ImportPath": "github.com/imSQL/go-proxysql-library/admin/servers",
-			"Rev": "b455362b0b75406464290dec344495e95bc5a538"
-		},
-		{
-			"ImportPath": "github.com/imSQL/go-proxysql-library/admin/status",
-			"Rev": "b455362b0b75406464290dec344495e95bc5a538"
-		},
-		{
-			"ImportPath": "github.com/imSQL/go-proxysql-library/admin/users",
-			"Rev": "b455362b0b75406464290dec344495e95bc5a538"
-		},
-		{
-			"ImportPath": "github.com/imSQL/go-proxysql-library/admin/variables",
-			"Rev": "b455362b0b75406464290dec344495e95bc5a538"
+			"ImportPath": "github.com/imSQL/proxysql",
+			"Rev": "cb28626d58cfa327487dd03837e053193268e7b2"
 		},
 		{
 			"ImportPath": "github.com/json-iterator/go",
