@@ -16,6 +16,8 @@ Such as:
 
     github.com/gin-gonic/gin
 
+    github.com/imSQL/proxysql
+
 
 ### 2.How to build?
 
