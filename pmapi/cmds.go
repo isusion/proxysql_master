@@ -8,7 +8,7 @@ import (
 )
 
 func (pmapi *PMApi) SetProxySQLReadonly(c *gin.Context) {
-	_, err := proxysql.ProxyReadOnly(pmapi.Apidb)
+	err := proxysql.ProxyReadOnly(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -16,7 +16,7 @@ func (pmapi *PMApi) SetProxySQLReadonly(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLReadwrite(c *gin.Context) {
-	_, err := proxysql.ProxyReadWrite(pmapi.Apidb)
+	err := proxysql.ProxyReadWrite(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -24,7 +24,7 @@ func (pmapi *PMApi) SetProxySQLReadwrite(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLStart(c *gin.Context) {
-	_, err := proxysql.ProxyStart(pmapi.Apidb)
+	err := proxysql.ProxyStart(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -32,7 +32,7 @@ func (pmapi *PMApi) SetProxySQLStart(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLRestart(c *gin.Context) {
-	_, err := proxysql.ProxyRestart(pmapi.Apidb)
+	err := proxysql.ProxyRestart(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -40,7 +40,7 @@ func (pmapi *PMApi) SetProxySQLRestart(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLStop(c *gin.Context) {
-	_, err := proxysql.ProxyStop(pmapi.Apidb)
+	err := proxysql.ProxyStop(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -48,7 +48,7 @@ func (pmapi *PMApi) SetProxySQLStop(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLPause(c *gin.Context) {
-	_, err := proxysql.ProxyPause(pmapi.Apidb)
+	err := proxysql.ProxyPause(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -56,7 +56,7 @@ func (pmapi *PMApi) SetProxySQLPause(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLResume(c *gin.Context) {
-	_, err := proxysql.ProxyResume(pmapi.Apidb)
+	err := proxysql.ProxyResume(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -64,7 +64,7 @@ func (pmapi *PMApi) SetProxySQLResume(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLShutdown(c *gin.Context) {
-	_, err := proxysql.ProxyShutdown(pmapi.Apidb)
+	err := proxysql.ProxyShutdown(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -72,7 +72,7 @@ func (pmapi *PMApi) SetProxySQLShutdown(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLFlogs(c *gin.Context) {
-	_, err := proxysql.ProxyFlushLogs(pmapi.Apidb)
+	err := proxysql.ProxyFlushLogs(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
@@ -80,7 +80,7 @@ func (pmapi *PMApi) SetProxySQLFlogs(c *gin.Context) {
 }
 
 func (pmapi *PMApi) SetProxySQLKill(c *gin.Context) {
-	_, err := proxysql.ProxyKill(pmapi.Apidb)
+	err := proxysql.ProxyKill(pmapi.Apidb)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 	}
