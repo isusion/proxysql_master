@@ -119,7 +119,8 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 	if len(hostname) == 0 || hostname == "undefined" {
 		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
