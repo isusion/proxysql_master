@@ -12,9 +12,7 @@ import (
 /*与调取器相关的api函数*/
 func (pmapi *PMApi) ListAllScheduler(c *gin.Context) {
 
-	var tmpsch proxysql.Schedulers
 	var arysch []proxysql.Schedulers
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -64,7 +62,6 @@ func (pmapi *PMApi) ListAllScheduler(c *gin.Context) {
 func (pmapi *PMApi) CreateOneScheduler(c *gin.Context) {
 
 	var tmpsch proxysql.Schedulers
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -108,7 +105,6 @@ func (pmapi *PMApi) CreateOneScheduler(c *gin.Context) {
 
 func (pmapi *PMApi) DeleteOneScheduler(c *gin.Context) {
 	var tmpsch proxysql.Schedulers
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -152,7 +148,6 @@ func (pmapi *PMApi) DeleteOneScheduler(c *gin.Context) {
 
 func (pmapi *PMApi) UpdateOneScheduler(c *gin.Context) {
 	var tmpsch proxysql.Schedulers
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")

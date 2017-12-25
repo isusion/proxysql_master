@@ -12,9 +12,7 @@ import (
 //查询出所有查询规则
 func (pmapi *PMApi) ListAllQueryRules(c *gin.Context) {
 
-	var tmpqr proxysql.QueryRules
 	var aryqrs []proxysql.QueryRules
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -65,7 +63,6 @@ func (pmapi *PMApi) ListAllQueryRules(c *gin.Context) {
 func (pmapi *PMApi) CreateOneQueryRules(c *gin.Context) {
 
 	var tmpqr proxysql.QueryRules
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -109,7 +106,6 @@ func (pmapi *PMApi) CreateOneQueryRules(c *gin.Context) {
 func (pmapi *PMApi) DeleteOneQueryRules(c *gin.Context) {
 
 	var tmpqr proxysql.QueryRules
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -153,7 +149,6 @@ func (pmapi *PMApi) DeleteOneQueryRules(c *gin.Context) {
 /*更新一个新的查询规则*/
 func (pmapi *PMApi) UpdateOneQueryRules(c *gin.Context) {
 	var tmpqr proxysql.QueryRules
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
