@@ -1,7 +1,6 @@
 package pmapi
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 	"strconv"
@@ -37,19 +36,24 @@ func (pmapi *PMApi) ListAllScheduler(c *gin.Context) {
 	if len(hostname) == 0 || hostname == "undefined" {
 		c.JSON(http.StatusOK, []proxysql.Schedulers{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
 
-		arysch, err = tmpsch.FindAllSchedulerInfo(pmapi.Apidb, limit, skip)
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
+
+		arysch, err = proxysql.FindAllSchedulerInfo(pmapi.Apidb, limit, skip)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
@@ -70,24 +74,29 @@ func (pmapi *PMApi) CreateOneScheduler(c *gin.Context) {
 	if len(hostname) == 0 || hostname == "undefined" {
 		c.JSON(http.StatusOK, []proxysql.Schedulers{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpsch); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->AddOneScheduler->AddOneScheduler tmpsch", tmpsch)
 
-		_, err := tmpsch.AddOneScheduler(pmapi.Apidb)
+		err = tmpsch.AddOneScheduler(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->CreateOneScheduler->AddOneScheduler Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
@@ -109,24 +118,29 @@ func (pmapi *PMApi) DeleteOneScheduler(c *gin.Context) {
 	if len(hostname) == 0 || hostname == "undefined" {
 		c.JSON(http.StatusOK, []proxysql.Schedulers{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpsch); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->DeleteOneScheduler->DeleteOneScheduler tmpsch", tmpsch)
 
-		_, err := tmpsch.DeleteOneScheduler(pmapi.Apidb)
+		err = tmpsch.DeleteOneScheduler(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->CreateOneScheduler->DeleteOneScheduler Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
@@ -148,24 +162,29 @@ func (pmapi *PMApi) UpdateOneScheduler(c *gin.Context) {
 	if len(hostname) == 0 || hostname == "undefined" {
 		c.JSON(http.StatusOK, []proxysql.Schedulers{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpsch); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->UpdateOneScheduler->UpdateOneScheduler tmpsch", tmpsch)
 
-		_, err := tmpsch.UpdateOneSchedulerInfo(pmapi.Apidb)
+		err = tmpsch.UpdateOneSchedulerInfo(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->CreateOneScheduler->UpdateOneScheduler Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
