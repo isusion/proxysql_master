@@ -12,10 +12,7 @@ import (
 /*返回所有后端数据库服务器的信息*/
 func (pmapi *PMApi) ListAllServers(c *gin.Context) {
 
-	var tmpserver proxysql.Servers
 	var aryservers []proxysql.Servers
-
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -67,7 +64,6 @@ func (pmapi *PMApi) ListAllServers(c *gin.Context) {
 func (pmapi *PMApi) CreateOneServer(c *gin.Context) {
 
 	var tmpserver proxysql.Servers
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -111,7 +107,6 @@ func (pmapi *PMApi) CreateOneServer(c *gin.Context) {
 /*删除指定服务器*/
 func (pmapi *PMApi) DeleteOneServers(c *gin.Context) {
 	var tmpserver proxysql.Servers
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -155,7 +150,6 @@ func (pmapi *PMApi) DeleteOneServers(c *gin.Context) {
 /*更新服务信息的patch函数*/
 func (pmapi *PMApi) UpdateOneServer(c *gin.Context) {
 	var tmpserver proxysql.Servers
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
