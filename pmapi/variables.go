@@ -10,9 +10,7 @@ import (
 
 //查询出所有变量的内容
 func (pmapi *PMApi) ListPsVariables(c *gin.Context) {
-	var tmpvars proxysql.Variables
 	var aryvars []proxysql.Variables
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
@@ -65,7 +63,6 @@ func (pmapi *PMApi) ListPsVariables(c *gin.Context) {
 func (pmapi *PMApi) UpdateOneVariables(c *gin.Context) {
 
 	var tmpvars proxysql.Variables
-	var err error
 
 	hostname := c.Query("hostname")
 	port := c.Query("port")
