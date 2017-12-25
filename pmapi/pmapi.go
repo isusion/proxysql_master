@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/imSQL/proxysql"
 )
 
 type PMApi struct {
@@ -13,6 +14,7 @@ type PMApi struct {
 	PMpass   string
 	PMhost   string
 	PMport   uint64
+	PMconn   *proxysql.Conn
 	Apidb    *sql.DB
 	ApiLogfd *os.File
 	ApiErr   error

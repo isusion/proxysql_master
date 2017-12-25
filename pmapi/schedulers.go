@@ -38,22 +38,20 @@ func (pmapi *PMApi) ListAllScheduler(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		
-		
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		arysch, err = proxysql.FindAllSchedulerInfo(pmapi.Apidb, limit, skip)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		arysch, pmapi.ApiErr = proxysql.FindAllSchedulerInfo(pmapi.Apidb, limit, skip)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 		c.JSON(http.StatusOK, arysch)
 	}
@@ -75,28 +73,26 @@ func (pmapi *PMApi) CreateOneScheduler(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		
-		
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		if err := c.Bind(&tmpsch); err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		if pmapi.ApiErr = c.Bind(&tmpsch); pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		}
 		log.Print("pmapi->AddOneScheduler->AddOneScheduler tmpsch", tmpsch)
 
-		err = tmpsch.AddOneScheduler(pmapi.Apidb)
-		if err != nil {
-			log.Print("pmapi->CreateOneScheduler->AddOneScheduler Failed", err)
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		pmapi.ApiErr = tmpsch.AddOneScheduler(pmapi.Apidb)
+		if pmapi.ApiErr != nil {
+			log.Print("pmapi->CreateOneScheduler->AddOneScheduler Failed", pmapi.ApiErr)
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"result": "OK"})
 		}
@@ -118,28 +114,26 @@ func (pmapi *PMApi) DeleteOneScheduler(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		
-		
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		if err := c.Bind(&tmpsch); err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		if pmapi.ApiErr = c.Bind(&tmpsch); pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		}
 		log.Print("pmapi->DeleteOneScheduler->DeleteOneScheduler tmpsch", tmpsch)
 
-		err = tmpsch.DeleteOneScheduler(pmapi.Apidb)
-		if err != nil {
-			log.Print("pmapi->CreateOneScheduler->DeleteOneScheduler Failed", err)
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		pmapi.ApiErr = tmpsch.DeleteOneScheduler(pmapi.Apidb)
+		if pmapi.ApiErr != nil {
+			log.Print("pmapi->CreateOneScheduler->DeleteOneScheduler Failed", pmapi.ApiErr)
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"result": "OK"})
 		}
@@ -161,28 +155,26 @@ func (pmapi *PMApi) UpdateOneScheduler(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		
-		
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		if err := c.Bind(&tmpsch); err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		if pmapi.ApiErr = c.Bind(&tmpsch); pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		}
 		log.Print("pmapi->UpdateOneScheduler->UpdateOneScheduler tmpsch", tmpsch)
 
-		err = tmpsch.UpdateOneSchedulerInfo(pmapi.Apidb)
-		if err != nil {
-			log.Print("pmapi->CreateOneScheduler->UpdateOneScheduler Failed", err)
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		pmapi.ApiErr = tmpsch.UpdateOneSchedulerInfo(pmapi.Apidb)
+		if pmapi.ApiErr != nil {
+			log.Print("pmapi->CreateOneScheduler->UpdateOneScheduler Failed", pmapi.ApiErr)
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"result": "OK"})
 		}

@@ -38,22 +38,20 @@ func (pmapi *PMApi) ListPsVariables(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-				
 
-
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		aryvars, err = proxysql.GetConfig(pmapi.Apidb)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		aryvars, pmapi.ApiErr = proxysql.GetConfig(pmapi.Apidb)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 		c.JSON(http.StatusOK, aryvars)
 	}
@@ -75,24 +73,22 @@ func (pmapi *PMApi) UpdateOneVariables(c *gin.Context) {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		
-		
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
-		if err := c.Bind(&tmpvars); err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		if pmapi.ApiErr = c.Bind(&tmpvars); pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		}
 
-		err = proxysql.UpdateOneConfig(pmapi.Apidb, tmpvars.VariablesName, tmpvars.Value)
-		if err != nil {
+		pmapi.ApiErr = proxysql.UpdateOneConfig(pmapi.Apidb, tmpvars.VariablesName, tmpvars.Value)
+		if pmapi.ApiErr != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": "UpdateOneVariable Failed"})
 		}
 		c.JSON(http.StatusOK, gin.H{"result": "OK"})

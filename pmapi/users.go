@@ -26,25 +26,25 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		if err := c.Bind(&tmpusr); err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		if pmapi.ApiErr = c.Bind(&tmpusr); pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		}
 		log.Print("pmapi->DeleteOneUser->DeleteOneUser tmpusr", tmpusr)
 
-		err = tmpusr.DeleteOneUser(pmapi.Apidb)
-		if err != nil {
-			log.Print("pmapi->DeleteOneUser->DeleteOneUser Failed", err)
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		pmapi.ApiErr = tmpusr.DeleteOneUser(pmapi.Apidb)
+		if pmapi.ApiErr != nil {
+			log.Print("pmapi->DeleteOneUser->DeleteOneUser Failed", pmapi.ApiErr)
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"result": "OK"})
 		}
@@ -67,28 +67,26 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		
-		
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		if err := c.Bind(&tmpusr); err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		if pmapi.ApiErr = c.Bind(&tmpusr); pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		}
 		log.Print("pmapi->CreateOneUser->AddOneUser tmpusr", tmpusr)
 
-		err = tmpusr.AddOneUser(pmapi.Apidb)
-		if err != nil {
-			log.Print("pmapi->CreateOneUser->AddOneUser Failed", err)
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		pmapi.ApiErr = tmpusr.AddOneUser(pmapi.Apidb)
+		if pmapi.ApiErr != nil {
+			log.Print("pmapi->CreateOneUser->AddOneUser Failed", pmapi.ApiErr)
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"result": "OK"})
 		}
@@ -123,22 +121,20 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		
-		
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		aryusr, err = proxysql.FindAllUserInfo(pmapi.Apidb, limit, skip)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		aryusr, pmapi.ApiErr = proxysql.FindAllUserInfo(pmapi.Apidb, limit, skip)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 		c.JSON(http.StatusOK, aryusr)
 	}
@@ -162,28 +158,26 @@ func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		
-		
 
-		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		pmapi.Apidb, err = conn.OpenConn()
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+		if pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
 		}
 
-		if err := c.Bind(&tmpusr); err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		if pmapi.ApiErr = c.Bind(&tmpusr); pmapi.ApiErr != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		}
 		log.Print("pmapi->UpdateOneUser->UpdateOneUser tmpusr", tmpusr)
 
-		err = tmpusr.UpdateOneUserInfo(pmapi.Apidb)
-		if err != nil {
-			log.Print("pmapi->UpdateOneUser->UpdateOneUser Failed", err)
-			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
+		pmapi.ApiErr = tmpusr.UpdateOneUserInfo(pmapi.Apidb)
+		if pmapi.ApiErr != nil {
+			log.Print("pmapi->UpdateOneUser->UpdateOneUser Failed", pmapi.ApiErr)
+			c.JSON(http.StatusExpectationFailed, gin.H{"result": pmapi.ApiErr})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"result": "OK"})
 		}
