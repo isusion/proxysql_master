@@ -22,11 +22,12 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 	if len(hostname) == 0 {
 		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 
-		conn, err := proxysql.NewConn(pmapi.Pmhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
@@ -64,13 +65,14 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 	if len(hostname) == 0 {
 		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		conn, err := proxysql.NewConn(pmapi.Pmhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
@@ -128,7 +130,7 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		conn, err := proxysql.NewConn(pmapi.Pmhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
@@ -168,7 +170,7 @@ func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		conn, err := proxysql.NewConn(pmapi.Pmhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}

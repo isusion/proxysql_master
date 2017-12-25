@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/imSQL/proxysql-master/pmapi"
+	"github.com/imSQL/proxysql_master/pmapi"
 )
 
 var (
