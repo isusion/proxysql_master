@@ -13,6 +13,7 @@ type PMApi struct {
 	PMuser    string
 	PMpass    string
 	PMhost    string
+	PMport    uint64
 	PMdb      string
 	PMdbi     string
 	Apidb     *sql.DB
