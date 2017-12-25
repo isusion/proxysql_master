@@ -1,7 +1,6 @@
 package pmapi
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 	"strconv"
@@ -38,19 +37,24 @@ func (pmapi *PMApi) ListAllServers(c *gin.Context) {
 	if len(hostname) == 0 || hostname == "undefined" {
 		c.JSON(http.StatusOK, []proxysql.Servers{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
 
-		aryservers, err = tmpserver.FindAllServerInfo(pmapi.Apidb, limit, skip)
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
+
+		aryservers, err = proxysql.FindAllServerInfo(pmapi.Apidb, limit, skip)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
@@ -79,18 +83,22 @@ func (pmapi *PMApi) CreateOneServer(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpserver); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->CreateOneServer->AddOneServer tmpserver", tmpserver)
 
-		_, err := tmpserver.AddOneServers(pmapi.Apidb)
+		err = tmpserver.AddOneServers(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->CreateOneServer->AddOneServer Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
@@ -119,18 +127,22 @@ func (pmapi *PMApi) DeleteOneServers(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpserver); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->DeleteOneServer->DeleteOneServer tmpserver", tmpserver)
 
-		_, err := tmpserver.DeleteOneServers(pmapi.Apidb)
+		err = tmpserver.DeleteOneServers(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->DeleteOneServer->DeleteOneServer Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
@@ -159,18 +171,22 @@ func (pmapi *PMApi) UpdateOneServer(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpserver); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->UpdateOneServer->UpdateOneServer tmpserver", tmpserver)
 
-		_, err := tmpserver.UpdateOneServerInfo(pmapi.Apidb)
+		err = tmpserver.UpdateOneServerInfo(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->UpdateOneServer->UpdateOneServer Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
