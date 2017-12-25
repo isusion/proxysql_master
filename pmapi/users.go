@@ -68,7 +68,7 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
-		pmapi.MakePMdbi()
+		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
@@ -124,7 +124,7 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
-		pmapi.MakePMdbi()
+		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
@@ -163,7 +163,7 @@ func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
-		pmapi.MakePMdbi()
+		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {

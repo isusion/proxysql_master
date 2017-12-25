@@ -39,7 +39,7 @@ func (pmapi *PMApi) ListAllServers(c *gin.Context) {
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
-		pmapi.MakePMdbi()
+		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
@@ -77,7 +77,7 @@ func (pmapi *PMApi) CreateOneServer(c *gin.Context) {
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
-		pmapi.MakePMdbi()
+		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
@@ -120,7 +120,7 @@ func (pmapi *PMApi) DeleteOneServers(c *gin.Context) {
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
-		pmapi.MakePMdbi()
+		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
@@ -163,7 +163,7 @@ func (pmapi *PMApi) UpdateOneServer(c *gin.Context) {
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
-		pmapi.MakePMdbi()
+		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {

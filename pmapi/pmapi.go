@@ -2,7 +2,6 @@ package pmapi
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -22,10 +21,6 @@ type PMApi struct {
 	ApiLogcwd string
 	ApiErr    error
 	Router    *gin.Engine
-}
-
-func (pmapi *PMApi) MakePMdbi() {
-	pmapi.PMdbi = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", pmapi.PMuser, pmapi.PMpass, pmapi.PMhost, pmapi.PMdb)
 }
 
 func (pmapi *PMApi) RegisterServices() {
