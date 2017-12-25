@@ -1,7 +1,6 @@
 package pmapi
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 	"strconv"
@@ -26,21 +25,23 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		pmapi.PMdb = "information_schema"
-		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.Pmhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpusr); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->DeleteOneUser->DeleteOneUser tmpusr", tmpusr)
 
-		_, err := tmpusr.DeleteOneUser(pmapi.Apidb)
+		err = tmpusr.DeleteOneUser(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->DeleteOneUser->DeleteOneUser Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
@@ -69,18 +70,22 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.Pmhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpusr); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->CreateOneUser->AddOneUser tmpusr", tmpusr)
 
-		_, err := tmpusr.AddOneUser(pmapi.Apidb)
+		err = tmpusr.AddOneUser(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->CreateOneUser->AddOneUser Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
@@ -123,11 +128,15 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.Pmhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		aryusr, err = tmpusr.FindAllUserInfo(pmapi.Apidb, limit, skip)
 		if err != nil {
@@ -159,18 +168,22 @@ func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.Pmhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpusr); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->UpdateOneUser->UpdateOneUser tmpusr", tmpusr)
 
-		_, err := tmpusr.UpdateOneUserInfo(pmapi.Apidb)
+		err = tmpusr.UpdateOneUserInfo(pmapi.Apidb)
 		if err != nil {
 			log.Print("pmapi->UpdateOneUser->UpdateOneUser Failed", err)
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
