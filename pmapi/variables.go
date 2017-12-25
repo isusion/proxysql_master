@@ -1,8 +1,8 @@
 package pmapi
 
 import (
-	"database/sql"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imSQL/proxysql"
@@ -36,19 +36,24 @@ func (pmapi *PMApi) ListPsVariables(c *gin.Context) {
 	if len(hostname) == 0 || hostname == "undefined" {
 		c.JSON(http.StatusOK, []proxysql.Variables{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
 
-		aryvars, err = tmpvars.GetProxySqlVariables(pmapi.Apidb)
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
+
+		aryvars, err = proxysql.GetConfig(pmapi.Apidb)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
@@ -76,17 +81,20 @@ func (pmapi *PMApi) UpdateOneVariables(c *gin.Context) {
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
 
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 		if err := c.Bind(&tmpvars); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 
-		_, err := tmpvars.UpdateOneVariable(pmapi.Apidb)
+		err = proxysql.UpdateOneConfig(pmapi.Apidb, tmpvars.VariablesName, tmpvars.Value)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": "UpdateOneVariable Failed"})
 		}
