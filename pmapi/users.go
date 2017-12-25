@@ -23,7 +23,7 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
 		pmapi.PMhost = hostname
-		pmapi.PMport = strconv.ParseUint(port, 10, 64)
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 
@@ -66,7 +66,7 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 		c.JSON(http.StatusOK, []proxysql.Users{})
 	} else {
 		pmapi.PMhost = hostname
-		pmapi.PMport = strconv.ParseUint(port, 10, 64)
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
@@ -108,8 +108,8 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 	port := c.Query("port")
 	username := c.Query("adminuser")
 	password := c.Query("adminpass")
-	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
-	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
+	limit, _ := strconv.ParseUint(c.Query("limit"), 10, 64)
+	page, _ := strconv.ParseUint(c.Query("page"), 10, 64)
 
 	if limit == 0 {
 		limit = 10
@@ -140,7 +140,7 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
 
-		aryusr, err = tmpusr.FindAllUserInfo(pmapi.Apidb, limit, skip)
+		aryusr, err = proxysql.FindAllUserInfo(pmapi.Apidb, limit, skip)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
