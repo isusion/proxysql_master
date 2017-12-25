@@ -9,18 +9,14 @@ import (
 )
 
 type PMApi struct {
-	PMuser    string
-	PMpass    string
-	PMhost    string
-	PMport    uint64
-	PMdb      string
-	PMdbi     string
-	Apidb     *sql.DB
-	ApiHost   string
-	ApiLogfd  *os.File
-	ApiLogcwd string
-	ApiErr    error
-	Router    *gin.Engine
+	PMuser   string
+	PMpass   string
+	PMhost   string
+	PMport   uint64
+	Apidb    *sql.DB
+	ApiLogfd *os.File
+	ApiErr   error
+	Router   *gin.Engine
 }
 
 func (pmapi *PMApi) RegisterServices() {

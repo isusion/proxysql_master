@@ -38,8 +38,8 @@ func (pmapi *PMApi) ListPsVariables(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		pmapi.PMdb = "information_schema"
-		
+				
+
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
@@ -75,7 +75,7 @@ func (pmapi *PMApi) UpdateOneVariables(c *gin.Context) {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		pmapi.PMdb = "information_schema"
+		
 		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)

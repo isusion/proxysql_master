@@ -38,7 +38,7 @@ func (pmapi *PMApi) ListAllScheduler(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		pmapi.PMdb = "information_schema"
+		
 		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
@@ -75,7 +75,7 @@ func (pmapi *PMApi) CreateOneScheduler(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		pmapi.PMdb = "information_schema"
+		
 		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
@@ -118,7 +118,7 @@ func (pmapi *PMApi) DeleteOneScheduler(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		pmapi.PMdb = "information_schema"
+		
 		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
@@ -161,7 +161,7 @@ func (pmapi *PMApi) UpdateOneScheduler(c *gin.Context) {
 		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
-		pmapi.PMdb = "information_schema"
+		
 		
 
 		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
