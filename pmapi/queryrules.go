@@ -1,7 +1,6 @@
 package pmapi
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 	"strconv"
@@ -37,19 +36,24 @@ func (pmapi *PMApi) ListAllQueryRules(c *gin.Context) {
 	if len(hostname) == 0 || hostname == "undefined" {
 		c.JSON(http.StatusOK, []proxysql.QueryRules{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
 
-		aryqrs, err = tmpqr.FindAllQr(pmapi.Apidb, limit, skip)
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
+
+		aryqrs, err = proxysql.FindAllQr(pmapi.Apidb, limit, skip)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
@@ -71,24 +75,29 @@ func (pmapi *PMApi) CreateOneQueryRules(c *gin.Context) {
 	if len(hostname) == 0 {
 		c.JSON(http.StatusOK, []proxysql.QueryRules{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpqr); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->CreateOneQr->AddOneQr tmpqr", tmpqr)
 
-		_, err = tmpqr.AddOneQr(pmapi.Apidb)
+		err = tmpqr.AddOneQr(pmapi.Apidb)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		} else {
@@ -110,24 +119,29 @@ func (pmapi *PMApi) DeleteOneQueryRules(c *gin.Context) {
 	if len(hostname) == 0 {
 		c.JSON(http.StatusOK, []proxysql.QueryRules{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpqr); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->DeleteOneQr->DeleteOneQr tmpqr", tmpqr)
 
-		_, err = tmpqr.DeleteOneQr(pmapi.Apidb)
+		err = tmpqr.DeleteOneQr(pmapi.Apidb)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		} else {
@@ -149,24 +163,29 @@ func (pmapi *PMApi) UpdateOneQueryRules(c *gin.Context) {
 	if len(hostname) == 0 {
 		c.JSON(http.StatusOK, []proxysql.QueryRules{})
 	} else {
-		pmapi.PMhost = hostname + ":" + port
+		pmapi.PMhost = hostname
+		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 		pmapi.PMuser = username
 		pmapi.PMpass = password
 		pmapi.PMdb = "information_schema"
 		pmapi.MakePMdbi()
 
-		pmapi.Apidb, err = sql.Open("mysql", pmapi.PMdbi)
+		conn, err := proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		}
-		defer pmapi.Apidb.Close()
+
+		pmapi.Apidb, err = conn.OpenConn()
+		if err != nil {
+			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
+		}
 
 		if err := c.Bind(&tmpqr); err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"result": err})
 		}
 		log.Print("pmapi->UpdateOneQr->UpdateOneQr tmpqr", tmpqr)
 
-		_, err = tmpqr.UpdateOneQrInfo(pmapi.Apidb)
+		err = tmpqr.UpdateOneQrInfo(pmapi.Apidb)
 		if err != nil {
 			c.JSON(http.StatusExpectationFailed, gin.H{"error": err})
 		} else {
