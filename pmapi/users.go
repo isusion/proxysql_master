@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-sql-driver/mysql"
 	"github.com/imSQL/proxysql"
 	"github.com/juju/errors"
 )
@@ -39,9 +38,18 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 				if pmapi.ApiErr = c.Bind(&tmpusr); pmapi.ApiErr != nil {
 					c.JSON(http.StatusExpectationFailed, errors.ErrorStack(pmapi.ApiErr))
 				} else {
-					pmapi.ApiErr = tmpusr.DeleteOneUser(pmapi.Apidb)
+					deluser, _ := proxysql.NewUser(tmpusr.Username, tmpusr.Password, tmpusr.DefaultHostgroup, tmpusr.DefaultSchema)
+					deluser.SetBackend(1)
+					deluser.SetFrontend(1)
+
+					pmapi.ApiErr = deluser.DeleteOneUser(pmapi.Apidb)
 					if pmapi.ApiErr != nil {
-						c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+						switch {
+						case errors.IsNotFound(pmapi.ApiErr):
+							c.JSON(http.StatusNotFound, errors.ErrorStack(pmapi.ApiErr))
+						default:
+							c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+						}
 					} else {
 						c.JSON(http.StatusOK, gin.H{"exit": "0", "messages": tmpusr.Username + " Delete Successed!"})
 					}
@@ -87,7 +95,7 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 					pmapi.ApiErr = tmpusr.AddOneUser(pmapi.Apidb)
 					if pmapi.ApiErr != nil {
 						switch {
-						case pmapi.ApiErr.(*errors.Err).Cause().(*mysql.MySQLError).Number == 1045:
+						case errors.IsAlreadyExists(pmapi.ApiErr):
 							c.JSON(http.StatusNotImplemented, errors.ErrorStack(pmapi.ApiErr))
 						default:
 							c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
