@@ -3,6 +3,7 @@ package pmapi
 import (
 	"database/sql"
 	"io"
+	"log"
 	"os"
 	"strconv"
 
@@ -49,6 +50,7 @@ func NewApi() (*PMApi, error) {
 // set api log.
 func (pmapi *PMApi) SetApiLog(w io.Writer) {
 	pmapi.ApiLog = w
+	log.SetOutput(pmapi.ApiLog)
 }
 
 // set api port.
