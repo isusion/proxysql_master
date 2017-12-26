@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/imSQL/proxysql"
+	"github.com/juju/errors"
 )
 
 func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
@@ -101,42 +102,58 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 	port := c.Query("port")
 	username := c.Query("adminuser")
 	password := c.Query("adminpass")
-	limit, _ := strconv.ParseUint(c.Query("limit"), 10, 64)
-	page, _ := strconv.ParseUint(c.Query("page"), 10, 64)
-
-	if limit == 0 {
-		limit = 10
-	}
-
-	if page == 0 {
-		page = 1
-	}
-
-	skip := (page - 1) * limit
-
-	if len(hostname) == 0 || hostname == "undefined" {
-		c.JSON(http.StatusOK, []proxysql.Users{})
+	limit, err := strconv.ParseUint(c.Query("limit"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errors.ErrorStack(errors.NewBadRequest(err, "limit  must >= 0")))
 	} else {
-		pmapi.PMhost = hostname
-		pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
-		pmapi.PMuser = username
-		pmapi.PMpass = password
+		page, err := strconv.ParseUint(c.Query("page"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, errors.ErrorStack(errors.NewBadRequest(err, "page must > 0")))
+		} else {
 
-		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
-		if pmapi.ApiErr != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
-		}
+			if limit == 0 {
+				limit = 10
+			}
 
-		pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
-		if pmapi.ApiErr != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
-		}
+			if page == 0 {
+				page = 1
+			}
 
-		aryusr, pmapi.ApiErr = proxysql.FindAllUserInfo(pmapi.Apidb, limit, skip)
-		if pmapi.ApiErr != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{"error": pmapi.ApiErr})
+			skip := (page - 1) * limit
+
+			log.Printf("GET api/v1/users?hostname=%s&port=%s&adminuser=%s&adminpass=%s&limit=%d&page=%d", hostname, port, username, password, limit, page)
+
+			if len(hostname) == 0 || hostname == "undefined" {
+				c.JSON(http.StatusBadRequest, errors.ErrorStack(errors.NewBadRequest(err, "hostname|port|adminuser|adminpass length is 0 or value is undefined")))
+			} else {
+				pmapi.PMhost = hostname
+				pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
+				pmapi.PMuser = username
+				pmapi.PMpass = password
+
+				// New connection instance
+				pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+				if pmapi.ApiErr != nil {
+					c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+				}
+
+				// Open Connection.
+				pmapi.Apidb, pmapi.ApiErr = pmapi.PMconn.OpenConn()
+				if pmapi.ApiErr != nil {
+					c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+				}
+
+				//Execute Query.
+				aryusr, pmapi.ApiErr = proxysql.FindAllUserInfo(pmapi.Apidb, limit, skip)
+				if pmapi.ApiErr != nil {
+					c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+				}
+
+				// return success.
+				c.JSON(http.StatusOK, aryusr)
+			}
+
 		}
-		c.JSON(http.StatusOK, aryusr)
 	}
 
 }
