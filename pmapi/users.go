@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-sql-driver/mysql"
 	"github.com/imSQL/proxysql"
 	"github.com/juju/errors"
 )
@@ -83,9 +84,14 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 
 					pmapi.ApiErr = tmpusr.AddOneUser(pmapi.Apidb)
 					if pmapi.ApiErr != nil {
-						c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+						switch {
+						case pmapi.ApiErr.(*errors.Err).Cause().(*mysql.MySQLError).Number == 1045:
+							c.JSON(http.StatusNotImplemented, errors.ErrorStack(pmapi.ApiErr))
+						default:
+							c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+						}
 					} else {
-						c.JSON(http.StatusOK, gin.H{"exit": "0", "messages": tmpusr.Username + " Create Successed!"})
+						c.JSON(http.StatusCreated, gin.H{"exit": "0", "messages": tmpusr.Username + " Create Successed!"})
 					}
 
 				}
