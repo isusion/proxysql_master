@@ -91,12 +91,14 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 				if pmapi.ApiErr = c.Bind(&tmpusr); pmapi.ApiErr != nil {
 					c.JSON(http.StatusExpectationFailed, errors.ErrorStack(pmapi.ApiErr))
 				} else {
-
-					pmapi.ApiErr = tmpusr.AddOneUser(pmapi.Apidb)
+					newuser, _ := proxysql.NewUser(tmpusr.Username, tmpusr.Password, tmpusr.DefaultHostgroup, tmpusr.DefaultSchema)
+					newuser.SetBackend(1)
+					newuser.SetFrontend(1)
+					pmapi.ApiErr = newuser.AddOneUser(pmapi.Apidb)
 					if pmapi.ApiErr != nil {
 						switch {
 						case errors.IsAlreadyExists(pmapi.ApiErr):
-							c.JSON(http.StatusNotImplemented, errors.ErrorStack(pmapi.ApiErr))
+							c.JSON(http.StatusFound, errors.ErrorStack(pmapi.ApiErr))
 						default:
 							c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
 						}
@@ -216,9 +218,17 @@ func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 				if pmapi.ApiErr = c.Bind(&tmpusr); pmapi.ApiErr != nil {
 					c.JSON(http.StatusExpectationFailed, errors.ErrorStack(pmapi.ApiErr))
 				} else {
-					pmapi.ApiErr = tmpusr.UpdateOneUserInfo(pmapi.Apidb)
+					updateuser, _ := proxysql.NewUser(tmpusr.Username, tmpusr.Password, tmpusr.DefaultHostgroup, tmpusr.DefaultSchema)
+					updateuser.SetBackend(1)
+					updateuser.SetFrontend(1)
+					pmapi.ApiErr = updateuser.UpdateOneUserInfo(pmapi.Apidb)
 					if pmapi.ApiErr != nil {
-						c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+						switch {
+						case errors.IsNotFound(pmapi.ApiErr):
+							c.JSON(http.StatusNotImplemented, errors.ErrorStack(pmapi.ApiErr))
+						default:
+							c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
+						}
 					} else {
 						c.JSON(http.StatusOK, gin.H{"exit": "0", "messages": tmpusr.Username + " Update Successed!"})
 					}
