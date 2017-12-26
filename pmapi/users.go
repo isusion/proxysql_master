@@ -11,7 +11,7 @@ import (
 )
 
 func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
-	/*新建一个用户实例*/
+	/*delete a users*/
 	var tmpusr proxysql.Users
 
 	hostname := c.Query("hostname")
@@ -64,7 +64,7 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 }
 
 func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
-	/*新建一个用户实例*/
+	/*create a user*/
 	var tmpusr proxysql.Users
 
 	hostname := c.Query("hostname")
@@ -183,10 +183,9 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 
 }
 
-/*更新用户信息的patch方法*/
 func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 
-	/*新建一个用户实例*/
+	/*update a user*/
 	var tmpusr proxysql.Users
 
 	hostname := c.Query("hostname")
