@@ -123,9 +123,10 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 
 			log.Printf("GET api/v1/users?hostname=%s&port=%s&adminuser=%s&adminpass=%s&limit=%d&page=%d", hostname, port, username, password, limit, page)
 
-			if len(hostname) == 0 || hostname == "undefined" {
-				c.JSON(http.StatusBadRequest, errors.ErrorStack(errors.NewBadRequest(err, "hostname|port|adminuser|adminpass length is 0 or value is undefined")))
+			if hostname == "" || hostname == "undefined" || port == "" || port == "undefined" || username == "" || username == "undefined" || password == "" || password == "undefined" {
+				c.JSON(http.StatusBadRequest, errors.ErrorStack(errors.New("hostname|port|adminuser|adminpass length is 0 or value is undefined")))
 			} else {
+				log.Printf(hostname)
 				pmapi.PMhost = hostname
 				pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 				pmapi.PMuser = username
@@ -169,8 +170,10 @@ func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 	username := c.Query("adminuser")
 	password := c.Query("adminpass")
 
-	if len(hostname) == 0 {
-		c.JSON(http.StatusOK, []proxysql.Users{})
+	log.Printf("GET api/v1/users?hostname=%s&port=%s&adminuser=%s&adminpass=%s", hostname, port, username, password)
+
+	if hostname == "" || hostname == "undefined" || port == "" || port == "undefined" || username == "" || username == "undefined" || password == "" || password == "undefined" {
+		c.JSON(http.StatusBadRequest, errors.ErrorStack(errors.New("hostname|port|adminuser|adminpass length is 0 or value is undefined")))
 	} else {
 		pmapi.PMhost = hostname + ":" + port
 		pmapi.PMuser = username
