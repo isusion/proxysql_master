@@ -41,7 +41,6 @@ func (pmapi *PMApi) ListAllQueryRules(c *gin.Context) {
 			if hostname == "" || hostname == "undefined" || port == "" || port == "undefined" || username == "" || username == "undefined" || password == "" || password == "undefined" {
 				c.JSON(http.StatusBadRequest, errors.ErrorStack(errors.New("hostname|port|adminuser|adminpass length is 0 or value is undefined")))
 			} else {
-				log.Printf(hostname)
 				pmapi.PMhost = hostname
 				pmapi.PMport, _ = strconv.ParseUint(port, 10, 64)
 				pmapi.PMuser = username
