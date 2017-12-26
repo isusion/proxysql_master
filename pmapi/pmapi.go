@@ -2,7 +2,9 @@ package pmapi
 
 import (
 	"database/sql"
+	"io"
 	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -10,15 +12,48 @@ import (
 )
 
 type PMApi struct {
-	PMuser   string
-	PMpass   string
-	PMhost   string
-	PMport   uint64
-	PMconn   *proxysql.Conn
-	Apidb    *sql.DB
-	ApiLogfd *os.File
-	ApiErr   error
-	Router   *gin.Engine
+	// proxysql connection informations.
+	PMuser string
+	PMpass string
+	PMhost string
+	PMport uint64
+	// proxysql connnection handler
+	PMconn *proxysql.Conn
+	// sql database handler
+	Apidb *sql.DB
+	// restfulapi log
+	ApiLog io.Writer
+	// restfulapi error
+	ApiErr error
+	// gin engine
+	Router *gin.Engine
+	// api port
+	ApiPort int
+}
+
+// new api instance.
+func NewApi() (*PMApi, error) {
+	pmapi := new(PMApi)
+
+	pmapi.PMhost = "127.0.0.1"
+	pmapi.PMport = 6032
+	pmapi.PMuser = "admin"
+	pmapi.PMpass = "admin"
+
+	pmapi.ApiLog = os.Stdout
+	pmapi.ApiPort = 3333
+
+	return pmapi, nil
+}
+
+// set api log.
+func (pmapi *PMApi) SetApiLog(w io.Writer) {
+	pmapi.ApiLog = w
+}
+
+// set api port.
+func (pmapi *PMApi) SetApiPort(port int) {
+	pmapi.ApiPort = port
 }
 
 func (pmapi *PMApi) RegisterServices() {
@@ -72,5 +107,6 @@ func (pmapi *PMApi) RegisterServices() {
 }
 
 func (pmapi *PMApi) RunApiService() {
-	pmapi.Router.Run(":3333")
+
+	pmapi.Router.Run(":" + strconv.Itoa(pmapi.ApiPort))
 }
