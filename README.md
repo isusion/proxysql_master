@@ -23,44 +23,46 @@ Such as:
 
 #### 2.1 build
 
-You can quickly build proxysql-master on your OS.
+You can quickly build proxysql_master on your OS.
 
 I recommend go version >= 1.6.
 
 ```
+# git clone https://github.com/imSQL/proxysql_master.git $GOPATH/src/github.com/imSQL/proxysql_master
+
 # go get -u github.com/go-sql-driver/mysql
 
 # go get -u github.com/gin-gonic/gin
 
 # go get -u github.com/imSQL/proxysql
 
-# go install proxysql-master 
+# go install proxysql_master 
 ```
 
 #### 2.2. docker build
 
-You can quickly build proxysql-master with Docker.
+You can quickly build proxysql_master with Docker.
 
 The Dockerfile in docker directory.
 
 ```
-# docker build -t proxysql-master .
+# docker build -t proxysql_master .
 
 ```
 
 ### 4. How to running?
 
 
-    # proxysql-master
+    # proxysql_master
 
-By default, proxysql-master print all messages to stdout.
+By default, proxysql_master print all messages to stdout.
 
-By default, proxysql-master use 3333 port to listen connections.
+By default, proxysql_master use 3333 port to listen connections.
 
-If you running proxysql-master by docker , execute this command:
+If you running proxysql_master by docker , execute this command:
 
-    # docker run -it proxysql-master
+    # docker run -it proxysql_master
 
 ### 5. How to use?
 
-ref : ![api_en-US.md](https://github.com/imSQL/proxysql-master/blob/v1.3/doc/api_en-US.md)
+ref : ![api_en-US.md](https://github.com/imSQL/proxysql_master/blob/v1.3/doc/api_en-US.md)
