@@ -2,6 +2,8 @@
 
 ### 1.introduce
 
+-----
+
 I think ProxySQL is a best MySQL proxy software.
 
 But I can't control it through a restful api.
@@ -20,6 +22,8 @@ Such as:
 
 
 ### 2.How to build?
+
+-----
 
 #### 2.1 build
 
@@ -52,6 +56,7 @@ The Dockerfile in docker directory.
 
 ### 4. How to running?
 
+-----
 
     # proxysql_master
 
@@ -65,4 +70,17 @@ If you running proxysql_master by docker , execute this command:
 
 ### 5. How to use?
 
+-----
+
 ref : ![api_en-US.md](https://github.com/imSQL/proxysql_master/blob/v1.3/doc/api_en-US.md)
+
+### Donate
+
+-----
+
+If you like the project and want to buy me a cola, you can through:
+
+|PayPal|微信|
+|------|---|
+|[![](https://www.paypalobjects.com/webstatic/paypalme/images/pp_logo_small.png)](https://www.paypal.me/taylor840326)|![](https://github.com/taylor840326/blog/raw/master/imgs/weixin.png)|
+
