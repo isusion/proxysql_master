@@ -70,6 +70,16 @@ const (
 		scheduler 
 	LIMIT %d 
 	OFFSET %d`
+
+	/*query Last Insert Id*/
+	StmtFindLastInsertId = `
+	SELECT 
+		max(id)
+	FROM scheduler
+	WHERE
+		filename = %q
+	AND 
+		interval_ms = %d`
 )
 
 // query all schedulers
@@ -189,6 +199,20 @@ func (schld *Schedulers) AddOneScheduler(db *sql.DB) error {
 	Query := fmt.Sprintf(StmtAddOneScheduler, schld.FileName, schld.IntervalMs, schld.Active, schld.Arg1, schld.Arg2, schld.Arg3, schld.Arg4, schld.Arg5)
 
 	_, err := db.Exec(Query)
+	if err != nil {
+		return errors.Trace(err)
+	}
+
+	Query = fmt.Sprintf(StmtFindLastInsertId, schld.FileName, schld.IntervalMs)
+	rows := db.QueryRow(Query)
+
+	/*
+		FIX:
+		It will always return 0 when you use sql.Result.LastInsertId() function to get last inserted row id.
+		And go-sql-driver/mysql not support transaction.
+		So,I Query a max(id) after insert a row.
+	*/
+	err = rows.Scan(&schld.Id)
 	if err != nil {
 		return errors.Trace(err)
 	}

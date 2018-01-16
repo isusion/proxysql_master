@@ -38,8 +38,8 @@
 		},
 		{
 			"ImportPath": "github.com/imSQL/proxysql",
-			"Comment": "v1.3.6",
-			"Rev": "0468dbe2c52c3750365b6f070067819f3ff1d36b"
+			"Comment": "v1.3.7",
+			"Rev": "e85ff3657e08dfa9fe062c9638dfb1a41bf837a2"
 		},
 		{
 			"ImportPath": "github.com/json-iterator/go",

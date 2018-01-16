@@ -28,6 +28,10 @@ func (pmapi *PMApi) DeleteOneUser(c *gin.Context) {
 		pmapi.PMpass = password
 
 		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		pmapi.PMconn.SetCharset("utf8")
+		pmapi.PMconn.SetCollation("utf8_general_ci")
+		pmapi.PMconn.MakeDBI()
+
 		if pmapi.ApiErr != nil {
 			c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
 		} else {
@@ -81,6 +85,10 @@ func (pmapi *PMApi) CreateOneUser(c *gin.Context) {
 		pmapi.PMpass = password
 
 		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		pmapi.PMconn.SetCharset("utf8")
+		pmapi.PMconn.SetCollation("utf8_general_ci")
+		pmapi.PMconn.MakeDBI()
+
 		if pmapi.ApiErr != nil {
 			c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
 		} else {
@@ -154,6 +162,10 @@ func (pmapi *PMApi) ListAllUsers(c *gin.Context) {
 
 				// New connection instance
 				pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+				pmapi.PMconn.SetCharset("utf8")
+				pmapi.PMconn.SetCollation("utf8_general_ci")
+				pmapi.PMconn.MakeDBI()
+
 				if pmapi.ApiErr != nil {
 					c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
 				} else {
@@ -205,6 +217,10 @@ func (pmapi *PMApi) UpdateOneUser(c *gin.Context) {
 
 		// New connection instance.
 		pmapi.PMconn, pmapi.ApiErr = proxysql.NewConn(pmapi.PMhost, pmapi.PMport, pmapi.PMuser, pmapi.PMpass)
+		pmapi.PMconn.SetCharset("utf8")
+		pmapi.PMconn.SetCollation("utf8_general_ci")
+		pmapi.PMconn.MakeDBI()
+
 		if pmapi.ApiErr != nil {
 			c.JSON(http.StatusInternalServerError, errors.ErrorStack(pmapi.ApiErr))
 		} else {
